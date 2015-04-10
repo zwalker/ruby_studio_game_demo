@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/studio_game/player'
+require_relative '../lib/studio_game/clumsy_player'
+require_relative '../lib/studio_game/berserk_player'
+require_relative '../lib/studio_game/game'
+
+#puts "Ruby Version: " + RUBY_VERSION
+#puts "Started on #{Time.new.strftime("%A %m/%d/%y at %I:%M%p")}"
+
+# player1 = Player.new("moe")
+# player2 = Player.new("larry", 60)
+# player3 = Player.new("curly", 125)
+
+game = StudioGame::Game.new("Knuckleheads")
+game.load_players(ARGV.shift || File.join(File.dirname(__FILE__), 'players.csv'))
+clumsy_player = StudioGame::ClumsyPlayer.new("klutz", 105)
+game.add_player(clumsy_player)
+berserk_player = StudioGame::BerserkPlayer.new("berserker", 50)
+game.add_player(berserk_player)
+# game.add_player(player1)
+# game.add_player(player2)
+# game.add_player(player3)
+
+loop do
+  puts "How many game rounds? ('quit' to exit)"
+  answer = gets.chomp.downcase
+  case answer
+  when /^\d+$/
+    game.play(answer.to_i)
+  when 'quit', 'exit'
+    game.print_stats
+    game.save_high_scores
+    break
+  else
+    puts "Please enter a number or 'quit'"
+  end
+end   
+
+
